@@ -28,8 +28,8 @@ color:#000;text-align:left;text-decoration:none}
 backdrop-filter:blur(7px) saturate(220%) brightness(1.06);
 box-shadow:inset 0 0 0 .67px rgba(255,255,255,.95),inset 1.5px 1.5px 1px -1px #fff,inset -1.5px -1.5px 1px -1px rgba(255,255,255,.8),
 inset 0 0 14px rgba(255,255,255,.6),0 0 0 .33px rgba(0,0,0,.06),0 12px 40px rgba(0,0,0,.12)}
-.fx{position:fixed;top:0;left:0;right:0;z-index:6;height:104px;pointer-events:none;opacity:0;transition:opacity .2s;
-background:linear-gradient(rgba(242,242,247,.86) 56%,rgba(242,242,247,0))}
+.fx{position:fixed;top:0;left:0;right:0;z-index:6;height:150px;pointer-events:none;opacity:0;transition:opacity .2s;
+background:linear-gradient(rgba(242,242,247,.97) 68%,rgba(242,242,247,0));-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 .fx.on{opacity:1}
 .nb{position:-webkit-sticky;position:sticky;top:0;z-index:7;display:flex;align-items:center;justify-content:center;height:54px}
 .nb button{position:absolute;left:16px;top:5px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;
@@ -171,42 +171,7 @@ const csvData = `"vietnam_name","price","photo","category","en_name","en_descrip
 "Chia Pudding",17000,"Chia pudding mango&banana.jpg","BREAKFAST","Chia Pudding","Chia Pudding with Cashew Butter, Banana, Mango, Nuts topping",,,,,,,"Pudding de chia","Pudding de chia avec beurre de cajou, banane, mangue, et garniture de noix","Pudín de chía","Pudín de chía con mantequilla de anacardo, plátano, mango y topping de frutos secos.","Pudding di chia","Budino di chia con burro di anacardi, banana, mango e topping di noci","Пудинг из чиа","Чиа-пудинг с кешью, бананом, манго и орехами сверху"
 "Home Made Chocolate Banana Cake",13000,"Choco banana cake.jpg","DESSERTS","Home Made Chocolate Banana Cake",,,,,,,,"Gâteau banane-chocolat maison",,"Pastel casero de chocolate y plátano",,"Torta fatta in casa al cioccolato e banana",,"Домашний шоколадно-банановый торт",
 "Home Made Coconut Cake",13000,"coconut cake.jpg","DESSERTS","Home Made Coconut Cake",,,,,,,,"Gâteau à la noix de coco maison",,"Pastel casero de coco",,"Torta fatta in casa al cocco",,"Домашний кокосовый торт",
-"Thai Tea Cheese Cake",14000,"Thai tea cheese cake.jpg","DESSERTS","Thai Tea Cheese Cake",,,,,,,,"Cheesecake au thé thaï",,"Pastel de queso con té tailandés",,"Cheesecake al tè thailandese",,"Чизкейк с тайским чаем",`
-
-    let currentLang = 'en';
-    let selections = {}; 
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      document.getElementById('languageSelector').style.display = 'none';
-      document.getElementById('menuContainer').style.display = 'block';
-      renderMenu();
-    }
-    
-    function renderMenu() {
-      const rows = csvData.trim().split('\n'); 
-      const { headers, groupedByCategory } = parseCSV(csvData); 
-
-      const container = document.getElementById('productList');
-      container.innerHTML = '';
-      selections = {}; // reset selections
-
-      
-      // сортируем категории по categoryOrder (неизвестные в конец)
-      const sortedCategories = Object.keys(groupedByCategory).sort((a, b) => {
-        const orderA = categoryOrder[a] ?? 999;
-        const orderB = categoryOrder[b] ?? 999;
-        return orderA - orderB;
-      });
-
-      sortedCategories.forEach(category => {
-        const products = groupedByCategory[category];
-
-        // add category header
-        container.innerHTML += `
-          <h3 class="lena-category-title mt-4 mb-3">${category}</h3>
-          <div class="category-block">
-        `;
+"Thai Tea Cheese Cake",14000,"Thai tea cheese cake.jpg","DESSERTS","Thai Tea Cheese Cake",,,,,,,,"Cheesecake au thé thaï",,"Pastel de queso con té tailandés",,"Cheesecake al tè thailandese",,"Чизкейк с тайским чаем",`;
 const categoryOrder = {"BREAKFAST": 1, "STARTERS": 2, "MAIN COURSES": 3, "COFFEE": 5, "DRINKS": 6, "DESSERTS": 8};
 const LANGS = [["en", "English", "gb"], ["de", "Deutsch", "de"], ["fr", "Français", "fr"], ["es", "Español", "es"], ["it", "Italiano", "it"], ["ru", "Русский", "ru"]];
 const T = {
