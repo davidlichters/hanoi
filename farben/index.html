@@ -77,6 +77,18 @@ padding:0;border:0;border-radius:50%}
 .wt{background:#fff}.wt strong,.wt span{font-weight:700}
 .wi small{display:block;color:#7f7f7f;font-size:15px;line-height:20px}
 .empty{padding:20px 16px;color:#7f7f7f;text-align:center}
+.pair{margin-top:8px;color:#7f7f7f;font-size:15px;line-height:20px}
+.pair a{color:#6A6D4F;font-weight:600;text-decoration:none;cursor:pointer}
+.dish.hl{animation:hl 1.6s ease}
+@keyframes hl{0%,40%{background:#fff4c2}100%{background:transparent}}
+.sweet{margin:0 16px 16px}
+.sweet p{margin:0 0 8px 16px;color:#6A6D4F;font-weight:700}
+.sweet .row{display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.sweet .row::-webkit-scrollbar{display:none}
+.sw{flex:none;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 8px;border:0;border-radius:18px;background:#fffef9;text-align:left;cursor:pointer;box-shadow:0 0 0 .67px rgba(106,109,79,.16)}
+.sw img.t{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.sw span{max-width:120px;font-size:15px;line-height:19px;color:#000}
+.sw i{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:15px;background:#f4f2e6}
 .zoom{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92)}
 .zoom img{max-width:94vw;max-height:86vh;border-radius:14px}
 </style></head>
@@ -96,6 +108,7 @@ padding:0;border:0;border-radius:50%}
 <div class="wbw"><button class="wb glass" type="button" id="wbtn"><span id="wlabel">Show to Waiter</span><em id="wcount" hidden>0</em></button></div>
 </div>
 <div class="ov" id="ov" hidden><div class="sheet"><div class="hd">For the waiter<button class="x glass" type="button" id="close" aria-label="Close"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA0CAYAAADFeBvrAAAClElEQVR4nNXau2sVQRTH8e89EQQbMVst2mgniBpFiY1g0MQ/QfABdoKIpf+DnYpVCk0a/wERfJZiYuEDFAQhEVEwCD4KG0HkwA4s4e7szO7MztxT7p3d/X24c8+dWXZUliXACDgJ7AZeAS/Jv6aABWAXsAK80YNbgK3AA2CuNngRuAT8I88qqsxHa8euA9dGZVleAW6OOWkZuJghqgCeAfvHfHZEgNmGEy8AdwAdkxPmaQNGa1bDfrVcQFF3M0EVFeaAZcwXDXob+GEZdD4DVOGAeQ3c15DrVbf42YJKNf0KB8x74DTw1wTUNj3fgkrxmyqAJw4Y7dDf2BQuN5TBHHTFMCaYQf1KjOqEoSGUok4lRHXGYAmUCtULQ0uYoVHTfTE4BBkKNV215l4YHEPERgXD4BEgFiooBs+bu6Jcl0nBMXSYIi4ol7WfK+aED4aOc97lz9eG8sFs+Ibr2plWO6KiYujZan1R0TFaugWnZ+m+/hGw3TLmHrA3NiYUyBVFbAwB12Eu0y86hsALyy6ooBgiLP99UMExRNrPfAQ+O4x7C3wPfXMJfD2zBdjnMPZMjKdJEgEz43FO8EdkkhBTRy2FyiIBrmFWADbMh5ZGcS4USgbaNh936H5BUBJ5mtVb8+oQKBkIYyo6SgbE1FELsVAyMMbUSiyUJMBERUkiTDSUJMREQUlizGbU774osXy2YyBMHTXfFyWZYHxRy03ZxYI5NPTmzAN1tgklmWG6oKaaQLlgfFFLdZRkiumMEmAb8LgF8y4BxpQratGALgOHWzBziTA+KH3R6phMAMYHNaOgTxOAcV1RrEn1rtzGBGCo6kXD2u858NA8rN8JXAX2VK863mj5anMozaqZ9RVN3TTeAv78B3aSD17gxYkVAAAAAElFTkSuQmCC" width="17.33" height="17.33" alt=""></button></div>
+<div class="sweet" id="sweet" hidden></div>
 <div class="grp" id="wlist"></div></div></div>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""></div>
 <script>
@@ -175,16 +188,19 @@ const csvData = `"vietnam_name","price","photo","category","en_name","en_descrip
 "Home Made Chocolate Banana Cake",13000,"Choco banana cake.jpg","DESSERTS","Home Made Chocolate Banana Cake",,,,,,,,"Gâteau banane-chocolat maison",,"Pastel casero de chocolate y plátano",,"Torta fatta in casa al cioccolato e banana",,"Домашний шоколадно-банановый торт",
 "Home Made Coconut Cake",13000,"coconut cake.jpg","DESSERTS","Home Made Coconut Cake",,,,,,,,"Gâteau à la noix de coco maison",,"Pastel casero de coco",,"Torta fatta in casa al cocco",,"Домашний кокосовый торт",
 "Thai Tea Cheese Cake",14000,"Thai tea cheese cake.jpg","DESSERTS","Thai Tea Cheese Cake",,,,,,,,"Cheesecake au thé thaï",,"Pastel de queso con té tailandés",,"Cheesecake al tè thailandese",,"Чизкейк с тайским чаем",`;
+const FOOD = ["BREAKFAST", "STARTERS", "MAIN COURSES"];
+// „Passt dazu“: Getränke zu Speisen (Hauskaffee mit Kokos und frische Säfte), per Tipp springt die Karte dorthin
+const PAIRS = ["Coconut Ice coffee", "House Juices"];
 const categoryOrder = {"BREAKFAST": 1, "STARTERS": 2, "MAIN COURSES": 3, "COFFEE": 5, "DRINKS": 6, "DESSERTS": 8};
 const LANGS = [["en", "English", "gb"], ["de", "Deutsch", "de"], ["pl", "Polski", "pl"], ["fr", "Français", "fr"], ["es", "Español", "es"], ["it", "Italiano", "it"], ["ru", "Русский", "ru"]];
 const T = {
-  en: {menu: "Menu", show: "Show to Waiter", add: "Add"},
-  de: {menu: "Speisekarte", show: "Dem Kellner zeigen", add: "Hinzufügen"},
-  pl: {menu: "Menu", show: "Pokaż kelnerowi", add: "Dodaj"},
-  fr: {menu: "Menu", show: "Montrer au serveur", add: "Ajouter"},
-  es: {menu: "Menú", show: "Mostrar al camarero", add: "Añadir"},
-  it: {menu: "Menù", show: "Mostra al cameriere", add: "Aggiungi"},
-  ru: {menu: "Меню", show: "Показать официанту", add: "Добавить"}
+  en: {menu: "Menu", show: "Show to Waiter", add: "Add", pair: "Goes well with", sweet: "Something sweet to finish?"},
+  de: {menu: "Speisekarte", show: "Dem Kellner zeigen", add: "Hinzufügen", pair: "Passt dazu", sweet: "Noch ein Dessert zum Schluss?"},
+  pl: {menu: "Menu", show: "Pokaż kelnerowi", add: "Dodaj", pair: "Pasuje do tego", sweet: "Coś słodkiego na koniec?"},
+  fr: {menu: "Menu", show: "Montrer au serveur", add: "Ajouter", pair: "Parfait avec", sweet: "Un dessert pour finir ?"},
+  es: {menu: "Menú", show: "Mostrar al camarero", add: "Añadir", pair: "Va bien con", sweet: "¿Algo dulce para terminar?"},
+  it: {menu: "Menù", show: "Mostra al cameriere", add: "Aggiungi", pair: "Si abbina a", sweet: "Qualcosa di dolce per finire?"},
+  ru: {menu: "Меню", show: "Показать официанту", add: "Добавить", pair: "Хорошо сочетается с", sweet: "Что-нибудь сладкое на десерт?"}
 };
 const CAT = {
   "BREAKFAST": {en: "Breakfast", de: "Frühstück", pl: "Śniadanie", fr: "Petit-déjeuner", es: "Desayuno", it: "Colazione", ru: "Завтрак"},
@@ -477,29 +493,56 @@ function open(lang) {
       const dz = lang === "de" ? DE_N[p.en_name] : lang === "pl" ? PL_N[p.en_name] : null;
       const id = items.length, nm = (dz && dz[0]) || p[lang + "_name"] || p.en_name || p.vietnam_name,
         ds = dz ? dz[1] : (p[lang + "_description"] || p.en_description);
-      items.push({en: p.en_name || p.vietnam_name, vn: p.vietnam_name, price: Number(p.price) || 0, opts: o.length ? o.map((v, i) => [v.trim(), (eo[i] || v).trim()]) : [[t.add, ""]]});
+      items.push({cat: c, photo: p.photo, name: nm, en: p.en_name || p.vietnam_name, vn: p.vietnam_name, price: Number(p.price) || 0, opts: o.length ? o.map((v, i) => [v.trim(), (eo[i] || v).trim()]) : [[t.add, ""]]});
       const vn = p.vietnam_name && p.vietnam_name.toUpperCase() !== (nm || "").toUpperCase() ? `<div class="vn">${esc(p.vietnam_name)}</div>` : "";
-      html += `<div class="dish">${p.photo ? `<img src="${IMG}${encodeURI(p.photo)}" alt="" loading="lazy" data-z="${IMG}${encodeURI(p.photo)}">` : ""}<div class="tx">` +
+      html += `<div class="dish" id="d${id}">${p.photo ? `<img src="${IMG}${encodeURI(p.photo)}" alt="" loading="lazy" data-z="${IMG}${encodeURI(p.photo)}">` : ""}<div class="tx">` +
         `<div class="top"><h3>${esc(nm)}</h3>${p.price ? `<span class="pr">${Number(p.price).toLocaleString("en-US")}</span>` : ""}</div>${vn}` +
         `${ds ? `<p>${esc(ds)}</p>` : ""}<div class="opts">` +
         items[id].opts.map((v, vi) => `<div class="opt"><span>${esc(v[0])}</span><div class="st z" data-k="${id}|${vi}">` +
           `<button class="mi" type="button" aria-label="Less"><img src="${MINUS}" width="12.33" height="2" alt=""></button><b>0</b>` +
           `<button class="pl" type="button" aria-label="More"><img src="${PLUS}" width="12.67" height="12.67" alt=""></button></div></div>`).join("") +
-        `</div></div></div>`;
+        `</div>${FOOD.includes(c) ? `<div class="pair" hidden data-pair="${id}"></div>` : ""}</div></div>`;
     });
     html += `</div>`;
   });
-  $("cats").innerHTML = nav; $("list").innerHTML = html; upd();
+  $("cats").innerHTML = nav; $("list").innerHTML = html;
+  const pairs = PAIRS.map(n => items.findIndex(it => it.en === n)).filter(i => i >= 0);
+  document.querySelectorAll(".pair").forEach(el => { el.innerHTML = esc(t.pair) + ": " +
+    pairs.map(i => `<a data-go="${i}">${esc(items[i].name)}</a>`).join(" · ") });
+  upd();
   $("lang").hidden = true; $("menu").hidden = false; window.scrollTo(0, 0);
 }
+function setCount(k, n) {
+  counts[k] = n;
+  const st = document.querySelector(`.st[data-k="${k}"]`);
+  if (st) { st.querySelector("b").textContent = n; st.classList.toggle("z", !n) }
+  const id = +k.split("|")[0], any = items[id].opts.some((v, vi) => counts[id + "|" + vi] > 0);
+  const pr = document.querySelector(`.pair[data-pair="${id}"]`); if (pr) pr.hidden = !any;
+  upd();
+}
 $("list").addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go) { const d = $("d" + go.dataset.go); if (d) { window.scrollTo({top: d.getBoundingClientRect().top + scrollY - 120, behavior: "smooth"});
+    d.classList.remove("hl"); void d.offsetWidth; d.classList.add("hl") } return }
   const z = e.target.closest("[data-z]"); if (z) { $("zimg").src = z.dataset.z; $("zoom").hidden = false; return }
   const b = e.target.closest(".st button"); if (!b) return;
   const st = b.parentNode, k = st.dataset.k, n = Math.max(0, (counts[k] || 0) + (b.classList.contains("pl") ? 1 : -1));
-  counts[k] = n; st.querySelector("b").textContent = n; st.classList.toggle("z", !n); upd();
+  setCount(k, n);
 });
 function upd() { const n = Object.values(counts).reduce((a, b) => a + b, 0); $("wcount").textContent = n; $("wcount").hidden = !n }
+function sweet() {
+  const t = T[currentLang] || T.en, chosen = items.some((it, id) => it.opts.some((v, vi) => counts[id + "|" + vi] > 0));
+  const hasDessert = items.some((it, id) => it.cat === "DESSERTS" && it.opts.some((v, vi) => counts[id + "|" + vi] > 0));
+  const ds = items.map((it, id) => [it, id]).filter(x => x[0].cat === "DESSERTS");
+  $("sweet").hidden = !chosen || hasDessert || !ds.length;
+  $("sweet").innerHTML = `<p>${esc(t.sweet)}</p><div class="row">` + ds.map(([it, id]) => `<button class="sw" type="button" data-add="${id}">` +
+    (it.photo ? `<img class="t" src="${IMG}${encodeURI(it.photo)}" alt="">` : "") + `<span>${esc(it.name)}</span>` +
+    `<i><img src="${PLUS}" width="12.67" height="12.67" alt=""></i></button>`).join("") + `</div>`;
+}
+$("sweet").addEventListener("click", e => { const b = e.target.closest("[data-add]"); if (!b) return;
+  const k = b.dataset.add + "|0"; setCount(k, (counts[k] || 0) + 1); $("wbtn").click() });
 $("wbtn").addEventListener("click", () => {
+  sweet();
   const rows = [];
   items.forEach((it, id) => {
     const parts = it.opts.map((v, vi) => [v, counts[id + "|" + vi] || 0]).filter(x => x[1]);
