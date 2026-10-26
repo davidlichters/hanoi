@@ -176,22 +176,23 @@ const csvData = `"vietnam_name","price","photo","category","en_name","en_descrip
 "Home Made Coconut Cake",13000,"coconut cake.jpg","DESSERTS","Home Made Coconut Cake",,,,,,,,"Gâteau à la noix de coco maison",,"Pastel casero de coco",,"Torta fatta in casa al cocco",,"Домашний кокосовый торт",
 "Thai Tea Cheese Cake",14000,"Thai tea cheese cake.jpg","DESSERTS","Thai Tea Cheese Cake",,,,,,,,"Cheesecake au thé thaï",,"Pastel de queso con té tailandés",,"Cheesecake al tè thailandese",,"Чизкейк с тайским чаем",`;
 const categoryOrder = {"BREAKFAST": 1, "STARTERS": 2, "MAIN COURSES": 3, "COFFEE": 5, "DRINKS": 6, "DESSERTS": 8};
-const LANGS = [["en", "English", "gb"], ["de", "Deutsch", "de"], ["fr", "Français", "fr"], ["es", "Español", "es"], ["it", "Italiano", "it"], ["ru", "Русский", "ru"]];
+const LANGS = [["en", "English", "gb"], ["de", "Deutsch", "de"], ["pl", "Polski", "pl"], ["fr", "Français", "fr"], ["es", "Español", "es"], ["it", "Italiano", "it"], ["ru", "Русский", "ru"]];
 const T = {
   en: {menu: "Menu", show: "Show to Waiter", add: "Add"},
   de: {menu: "Speisekarte", show: "Dem Kellner zeigen", add: "Hinzufügen"},
+  pl: {menu: "Menu", show: "Pokaż kelnerowi", add: "Dodaj"},
   fr: {menu: "Menu", show: "Montrer au serveur", add: "Ajouter"},
   es: {menu: "Menú", show: "Mostrar al camarero", add: "Añadir"},
   it: {menu: "Menù", show: "Mostra al cameriere", add: "Aggiungi"},
   ru: {menu: "Меню", show: "Показать официанту", add: "Добавить"}
 };
 const CAT = {
-  "BREAKFAST": {en: "Breakfast", de: "Frühstück", fr: "Petit-déjeuner", es: "Desayuno", it: "Colazione", ru: "Завтрак"},
-  "STARTERS": {en: "Starters", de: "Vorspeisen", fr: "Entrées", es: "Entrantes", it: "Antipasti", ru: "Закуски"},
-  "MAIN COURSES": {en: "Main Courses", de: "Hauptgerichte", fr: "Plats principaux", es: "Platos principales", it: "Piatti principali", ru: "Основные блюда"},
-  "COFFEE": {en: "Coffee", de: "Kaffee", fr: "Café", es: "Café", it: "Caffè", ru: "Кофе"},
-  "DRINKS": {en: "Drinks", de: "Getränke", fr: "Boissons", es: "Bebidas", it: "Bevande", ru: "Напитки"},
-  "DESSERTS": {en: "Desserts", de: "Desserts", fr: "Desserts", es: "Postres", it: "Dolci", ru: "Десерты"}
+  "BREAKFAST": {en: "Breakfast", de: "Frühstück", pl: "Śniadanie", fr: "Petit-déjeuner", es: "Desayuno", it: "Colazione", ru: "Завтрак"},
+  "STARTERS": {en: "Starters", de: "Vorspeisen", pl: "Przystawki", fr: "Entrées", es: "Entrantes", it: "Antipasti", ru: "Закуски"},
+  "MAIN COURSES": {en: "Main Courses", de: "Hauptgerichte", pl: "Dania główne", fr: "Plats principaux", es: "Platos principales", it: "Piatti principali", ru: "Основные блюда"},
+  "COFFEE": {en: "Coffee", de: "Kaffee", pl: "Kawa", fr: "Café", es: "Café", it: "Caffè", ru: "Кофе"},
+  "DRINKS": {en: "Drinks", de: "Getränke", pl: "Napoje", fr: "Boissons", es: "Bebidas", it: "Bevande", ru: "Напитки"},
+  "DESSERTS": {en: "Desserts", de: "Desserts", pl: "Desery", fr: "Desserts", es: "Postres", it: "Dolci", ru: "Десерты"}
 };
 function parseCSV(csvText) {
   const lines = csvText.trim().split('\n').filter(l => l.trim() !== '');
@@ -394,6 +395,61 @@ const DE_V = {"Beef": "Rind", "Chicken": "Hähnchen", "Chicken breast": "Hähnch
   "Orange": "Orange", "Passion Fruit Soda & Mint": "Maracuja-Soda mit Minze", "Prawn": "Garnele", "Regular": "Normal",
   "Tanzania Black": "Schwarztee aus Tansania", "Tuna": "Thunfisch", "Vegan": "Vegan", "Vegetarian": "Vegetarisch", "Veggie": "Gemüse"};
 const deVar = v => { const m = v.trim().match(/^(.*?)(\s*\(\+\d+\))?$/); return (DE_V[m[1].trim()] || m[1].trim()) + (m[2] || "") };
+const PL_N = {
+  "Spring Rolls": ["Sajgonki", "Smażone sajgonki. Chrupiące i sprężyste, z pęcherzykową skórką, podawane z sałatką i słodkim sosem chili."],
+  "Summer Rolls": ["Letnie rolki", "Wietnamskie danie tradycyjnie z wieprzowiną, krewetkami, warzywami, makaronem ryżowym i ziołami, zawinięte w wietnamski papier ryżowy (bánh tráng). Podawane z domowym sosem orzechowym."],
+  "Steamed Bao Bun": ["Bułeczka bao na parze", "Wietnamska bułeczka na parze to popularne szybkie śniadanie z ulicy lub popołudniowa przekąska. Z sosem sojowym i czosnkiem, podawana z sałatką."],
+  "Dumplings": ["Pierożki", "Popularne kantońskie danie, które przywieźli do południowego Wietnamu Hoa: małe pierożki z różnymi nadzieniami."],
+  "Green Papaya Salad": ["Sałatka z zielonej papai", "Zielona papaja w cienkich paskach, świeże zioła i wyrazisty dressing. Zwykle z kruszonymi orzeszkami, suszonymi krewetkami lub chrupiącą szalotką, idealne połączenie chrupkości i delikatności."],
+  "Tofu in Tomato Sauce": ["Tofu w sosie pomidorowym", "Chrupiące tofu duszone w aromatycznym, lekko kwaskowym sosie pomidorowym z czosnkiem, cebulą i dojrzałymi pomidorami. Idealne danie wegańskie, które jemy w domu, choć nie jesteśmy weganami."],
+  "Fried Rice": ["Smażony ryż", "Tradycyjny smażony ryż z jajkiem, zieloną fasolką i kostkami marchewki."],
+  "Summer Salad": ["Letnia sałatka", "Świeże sezonowe zielenie z kwaskowymi owocami, lekkimi przyprawami i bogatym smakiem naszego domowego sosu kokosowo-orzechowego."],
+  "Shaking Beef": ["Shaking Beef", "Delikatne kostki polędwicy wołowej marynowane co najmniej godzinę w 3 wietnamskich sosach, a potem „potrząsane” w gorącym woku z warzywami. Podawane z ryżem na parze, mango, sałatką i jajkiem."],
+  "Beef Noodle": ["Zupa pho z wołowiną", "Bulion wołowy gotowany 24 godziny z 5 wietnamskimi przyprawami, z płaskim makaronem ryżowym, cienkimi plastrami polędwicy wołowej, dymką i ziołami. Pho to najbardziej znane wietnamskie danie, uważane za narodowe danie Wietnamu."],
+  "Chicken Noodle Soup": ["Zupa z kurczakiem i makaronem (pho ga)", "Lżejsza, ale równie aromatyczna zupa z makaronem. W przeciwieństwie do pho bo, które gotuje się długo i na które chodzi się do restauracji, pho ga gotujemy w domu. To ulubione śniadanie mojego taty."],
+  "Cold Noodle Soup with Grilled Chicken": ["Zimny makaron z grillowanym kurczakiem", "Okrągły makaron ryżowy z grillowanym mięsem z południowego Wietnamu: zimny makaron z grillowanym kurczakiem, sajgonką, świeżymi ziołami, prażonymi orzeszkami, marynowaną marchewką i ogórkiem, z lekkim, słodkim sosem rybnym."],
+  "Stir-fried Glass Noodle": ["Smażony makaron szklany", "Makaron szklany to przezroczysty makaron ze skrobi (u nas ze skrobi fasoli mung), uważany za najzdrowszy (mało węglowodanów, bez glutenu)."],
+  "Drunken Noodle": ["Drunken Noodles", "Tak, to kuchnia tajska. Ale ją kochamy, a Hanoi House Cafe w Paje robi to danie wyjątkowo dobrze. Makaron jajeczny robimy sami. Jeśli potrzebujesz bez glutenu, poproś o makaron ryżowy."],
+  "Banh Xeo": ["Bánh Xèo", "Chrupiący wietnamski naleśnik z mąki ryżowej z krewetkami i kiełkami fasoli. Złocisty i chrupiący, podawany ze świeżymi ziołami, sałatą i kwaskowym sosem do maczania. Kawałki zawija się w sałatę lub papier ryżowy, idealna równowaga smaków i tekstur."],
+  "Tuna Tataki": ["Tataki z tuńczyka", "Lekko obsmażony tuńczyk w plastrach, podawany schłodzony z dressingiem ponzu i smażonym ryżem."],
+  "Vietnamese dripped coffee": ["Wietnamska kawa z filtra", "Czarna (na gorąco lub z lodem)"],
+  "Espresso": ["Espresso", "Mielona na miejscu mieszanka 90% arabiki i 10% robusty (pojedyncze lub podwójne)"],
+  "Cappuccino": ["Cappuccino", "Powiedz nam, czy chcesz cappuccino z mlekiem krowim, czy z naszym domowym mlekiem kokosowym lub z nerkowców."],
+  "Cafe Latte": ["Caffè latte", ""],
+  "Egg coffee": ["Kawa z jajkiem", "Kremowo ubite jajko z wietnamską kawą, sekretny przepis rodzin Giang i Đinh ze starego miasta w Hanoi od lat 60."],
+  "Coconut Ice coffee": ["Mrożona kawa kokosowa", "Codziennie robimy własne mleko kokosowe, zamrażamy je i kruszymy do mocnej czarnej wietnamskiej kawy."],
+  "Yogurt coffee Ice": ["Mrożona kawa z jogurtem", "Kruszony mrożony jogurt z mocną wietnamską kawą, lekko kwaskowa i dobra na trawienie."],
+  "Dalgona coffee Ice": ["Mrożona kawa dalgona", "Ubita skoncentrowana kawa z mlekiem i lodem (krowie lub roślinne). Może być bardzo mocna, powiedz baristce lub bariście, jak lubisz."],
+  "Spice coffee": ["Kawa z przyprawami", "Jesteśmy na Wyspie Przypraw, więc czemu nie kawa z 5 przyprawami?"],
+  "Americano": ["Americano", ""],
+  "Macchiato": ["Macchiato", ""],
+  "Flat White": ["Flat white", ""],
+  "Challenge my barista": ["Wyzwanie dla baristy", "Zamów coś najdziwniejszego i najtrudniejszego, a zobaczysz, co zrobi nasz zespół. Często takie napoje trafiają potem do menu. Może twój?"],
+  "Tea Hot or Ice": ["Herbata na gorąco lub z lodem", ""],
+  "Matcha Ice Latte": ["Mrożona matcha latte", ""],
+  "Mango matcha Latte": ["Matcha latte z mango", ""],
+  "Ice Coconut Matcha": ["Mrożona matcha kokosowa", ""],
+  "Soda": ["Napój gazowany", ""],
+  "Snow Lemonade": ["Snow Lemonade", ""],
+  "Smoothie": ["Smoothie", ""],
+  "Ice coconut": ["Kokos z lodem", ""],
+  "House Juices": ["Domowe soki", "Nasze soki robimy w 100% w wyciskarce wolnoobrotowej, to czysty sok (bez wody i bez cukru)."],
+  "Omelette": ["Omlet", "Jajko z warzywami zawinięte w wodorosty, podawane z ziołami, mango i awokado. Tak mama sprytnie przekonywała mnie do warzyw."],
+  "Mixed Yogurt Fruit Bowl": ["Miska jogurtu z owocami", "Zdrowa miska XXL z owocami tropikalnymi, jogurtem lub puddingiem chia i prażonymi orzechami."],
+  "Banana Fritter": ["Banan w cieście", "Smażony banan w cieście z cynamonem."],
+  "Chia Pudding": ["Pudding chia", "Pudding chia z masłem z nerkowców, bananem, mango i orzechami."],
+  "Home Made Chocolate Banana Cake": ["Domowe ciasto czekoladowo-bananowe", ""],
+  "Home Made Coconut Cake": ["Domowe ciasto kokosowe", ""],
+  "Thai Tea Cheese Cake": ["Sernik z tajską herbatą", ""]
+};
+const PL_V = {"Beef": "Wołowina", "Chicken": "Kurczak", "Chicken breast": "Pierś z kurczaka", "Coconut Milk": "Mleko kokosowe",
+  "Cow Milk": "Mleko krowie", "Crispy Chicken": "Chrupiący kurczak", "Extra 100gr Beef Fillet": "Dodatkowe 100 g polędwicy wołowej",
+  "Extra Poached Egg": "Dodatkowe jajko w koszulce", "Extra prawns": "Dodatkowe krewetki", "Fresh Mint": "Świeża mięta",
+  "Ginger honey": "Imbir z miodem", "Green": "Zielona", "Hibiscus": "Hibiskus", "Homemade Tofu": "Domowe tofu",
+  "Hot": "Na gorąco", "Ice": "Z lodem", "Lemon Soda with Mint": "Lemoniada cytrynowa z miętą", "Mango": "Mango", "Masala": "Masala",
+  "Orange": "Pomarańcza", "Passion Fruit Soda & Mint": "Napój z marakują i miętą", "Prawn": "Krewetka", "Regular": "Zwykła",
+  "Tanzania Black": "Czarna herbata z Tanzanii", "Tuna": "Tuńczyk", "Vegan": "Wegańska", "Vegetarian": "Wegetariańska", "Veggie": "Warzywna"};
+const plVar = v => { const m = v.trim().match(/^(.*?)(\s*\(\+\d+\))?$/); return (PL_V[m[1].trim()] || m[1].trim()) + (m[2] || "") };
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const title = s => s.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
@@ -417,7 +473,8 @@ function open(lang) {
       if (o.length == 1 && o[0].indexOf(",") !== -1) o = o[0].split(",");
       if (eo.length == 1 && eo[0].indexOf(",") !== -1) eo = eo[0].split(",");
       if (lang === "de") o = eo.map(deVar);
-      const dz = lang === "de" ? DE_N[p.en_name] : null;
+      if (lang === "pl") o = eo.map(plVar);
+      const dz = lang === "de" ? DE_N[p.en_name] : lang === "pl" ? PL_N[p.en_name] : null;
       const id = items.length, nm = (dz && dz[0]) || p[lang + "_name"] || p.en_name || p.vietnam_name,
         ds = dz ? dz[1] : (p[lang + "_description"] || p.en_description);
       items.push({en: p.en_name || p.vietnam_name, vn: p.vietnam_name, price: Number(p.price) || 0, opts: o.length ? o.map((v, i) => [v.trim(), (eo[i] || v).trim()]) : [[t.add, ""]]});
